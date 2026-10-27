@@ -1,0 +1,116 @@
+import { normalizeText } from "./textUtils";
+
+const stopWords = new Set([
+  "the",
+  "and",
+  "for",
+  "are",
+  "but",
+  "not",
+  "you",
+  "your",
+  "with",
+  "this",
+  "that",
+  "was",
+  "were",
+  "have",
+  "has",
+  "had",
+  "from",
+  "they",
+  "their",
+  "them",
+  "then",
+  "than",
+  "when",
+  "what",
+  "where",
+  "which",
+  "who",
+  "will",
+  "would",
+  "could",
+  "should",
+  "can",
+  "may",
+  "might",
+  "into",
+  "about",
+  "because",
+  "been",
+  "being",
+  "also",
+  "its",
+  "our",
+  "out",
+  "all",
+  "any",
+  "how",
+  "his",
+  "her",
+  "she",
+  "him",
+  "one",
+  "two",
+  "more",
+  "most",
+  "some",
+  "such",
+  "only",
+  "very",
+  "just",
+  "like",
+  "while",
+  "there",
+  "here",
+  "each",
+  "other",
+  "these",
+  "those",
+  "who",
+  "why",
+  "i",
+  "me",
+  "my",
+  "we",
+  "us",
+  "he",
+  "it",
+  "a",
+  "an",
+  "to",
+  "of",
+  "in",
+  "on",
+  "at",
+  "by",
+  "as",
+  "is",
+  "am",
+  "be",
+  "do",
+  "did",
+  "if",
+  "or",
+  "so",
+  "up",
+]);
+
+export function findRepeatedWords(text) {
+  const words = normalizeText(text)
+    .split(/\s+/)
+    .filter((word) => word.length >= 4 && !stopWords.has(word));
+
+  const counts = {};
+
+  for (const word of words) {
+    counts[word] = (counts[word] || 0) + 1;
+  }
+
+  return Object.entries(counts)
+    .filter(([, count]) => count >= 3)
+    .map(([word, count]) => ({ word, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+}
